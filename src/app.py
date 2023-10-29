@@ -1,5 +1,9 @@
 import pygame
 from pygame.locals import *
+from src.scripts.tiles import Level
+from src.scripts.pathfinder import find_path
+import asyncio
+import time
 
 pygame.init()
 
@@ -17,8 +21,22 @@ class App:
 
     event_handlers = []
 
+    map = Level('src/level.json', 30)
+    
+    start = [2, 2]
+    target = [20, 16]
+
+    timer = time.perf_counter()
+    
+    path = find_path(start, target, map.tiles)
+    for tile in path:
+        map.tiles[tile[1]][tile[0]] = 4
+        
+    map.tiles[start[1]][start[0]] = 2
+    map.tiles[target[1]][target[0]] = 3
+
     @classmethod
-    def loop(cls):
+    async def loop(cls):
         screen = cls.screen
         while True:
             cls.clock.tick(cls.fps)
@@ -26,10 +44,14 @@ class App:
 
             cls.handle_events()
 
-            screen.fill((0, 0, 0))
+            screen.fill((255, 255, 255))
+
+            cls.map.draw(screen)
 
             pygame.display.set_caption(str(cls.clock.get_fps()))
             pygame.display.update()
+
+            await asyncio.sleep(0)
     
     @classmethod
     def handle_events(cls):

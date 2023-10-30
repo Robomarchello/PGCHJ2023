@@ -2,8 +2,12 @@ import pygame
 from pygame.locals import *
 from src.scripts.tiles import Level
 from src.scripts.pathfinder import find_path
+from src.scripts.player import Player
+from src.scripts.mouse import Mouse
+from src.scripts.states.state import State
+from src.scripts.states.game import Game 
 import asyncio
-import time
+
 
 pygame.init()
 
@@ -15,25 +19,22 @@ class App:
     pygame.display.set_caption('GAME NAME')
 
     clock = pygame.time.Clock()
-    fps = 120
+    fps = 0
 
     dt = 1
 
-    event_handlers = []
-
-    map = Level('src/level.json', 30)
+    states = {
+        'game': Game(screen, ScreenSize)
+    }
     
-    start = [2, 2]
-    target = [20, 16]
-
-    timer = time.perf_counter()
+    crnt_state = 'game'
+    state = states[crnt_state]
     
-    path = find_path(start, target, map.tiles)
-    for tile in path:
-        map.tiles[tile[1]][tile[0]] = 4
-        
-    map.tiles[start[1]][start[0]] = 2
-    map.tiles[target[1]][target[0]] = 3
+    #start = [2, 2]
+    #target = [20, 16]
+    #path = find_path(start, target, map.tiles)
+
+    event_handlers = [Mouse]
 
     @classmethod
     async def loop(cls):
@@ -43,10 +44,11 @@ class App:
             dt = cls.get_dt()
 
             cls.handle_events()
-
+            Mouse.update()
+             
             screen.fill((255, 255, 255))
 
-            cls.map.draw(screen)
+            cls.state.draw(dt)
 
             pygame.display.set_caption(str(cls.clock.get_fps()))
             pygame.display.update()
@@ -59,6 +61,11 @@ class App:
             if event.type == QUIT:
                 pygame.quit()
                 raise SystemExit
+            
+            for event_handler in cls.event_handlers:
+                event_handler.handle_event(event)
+
+            cls.state.handle_event(event)
             
     @classmethod
     def get_dt(cls):

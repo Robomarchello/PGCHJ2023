@@ -58,7 +58,6 @@ def find_path(start, target, tiles):
                 if neighbor[0] == target[0] and neighbor[1] == target[1]:
                     return tile[1] + [neighbor]
                 else:
-                    tiles[neighbor[1]][neighbor[0]] = 1
                     new_tiles[neighbor[1]][neighbor[0]] = 1
 
         activeTiles = new_active

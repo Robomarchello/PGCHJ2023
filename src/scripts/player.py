@@ -21,7 +21,7 @@ class Player:
         self.mouse_move = pygame.Vector2(
             ScreenSize[1] / ScreenSize[0],
             1)
-        self.mouse_move *= 0.17
+        self.mouse_move *= 0.15
     
     def update(self, dt, tileRects):
         moveVec = pygame.Vector2(0, 0)

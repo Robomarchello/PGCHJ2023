@@ -30,10 +30,6 @@ class App:
     crnt_state = 'game'
     state = states[crnt_state]
     
-    #start = [2, 2]
-    #target = [20, 16]
-    #path = find_path(start, target, map.tiles)
-
     event_handlers = [Mouse]
 
     @classmethod

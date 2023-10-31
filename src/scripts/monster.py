@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from random import randint
 from .pathfinder import find_path
+from math import sin
 
 
 class Monster:
@@ -23,6 +24,7 @@ class Monster:
             'roam': False
         }
 
+        #self.rotation = sin(...)
 
     def move(self, dt):
         player_rect = self.player.rect

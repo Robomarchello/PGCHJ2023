@@ -21,7 +21,7 @@ class Player:
         self.mouse_move = pygame.Vector2(
             ScreenSize[1] / ScreenSize[0],
             1)
-        self.mouse_move *= 0.1
+        self.mouse_move *= 0.17
     
     def update(self, dt, tileRects):
         moveVec = pygame.Vector2(0, 0)
@@ -39,7 +39,7 @@ class Player:
 
             self.move_player(velocity, tileRects)
 
-        mouse_offset = (self.center - Mouse.position).elementwise() * self.mouse_move
+        mouse_offset = (Mouse.position - self.center).elementwise() * self.mouse_move
 
         self.camera_pos = self.center - self.rect.center
         self.camera_pos -= mouse_offset

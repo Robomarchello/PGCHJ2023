@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from random import randint
 from .pathfinder import find_path
 
 
@@ -11,6 +12,8 @@ class Monster:
         self.tile_pos = tile_pos
 
         self.player = player
+        
+        self.roam_target = self.get_target(tiles)
 
         self.step = 0.2
         self.step_timer = 0
@@ -20,23 +23,35 @@ class Monster:
             'roam': False
         }
 
+
     def move(self, dt):
+        player_rect = self.player.rect
+        player_tile = (
+            (player_rect.x // self.tileSize),
+            (player_rect.y // self.tileSize)
+        )
         if self.targets['player']:
-            target_rect = self.player.rect
-            target_tile = (
-                (target_rect.x // self.tileSize),
-                (target_rect.y // self.tileSize)
-            )
+            target_tile = player_tile
+
+            if self.tiles[player_tile[1]][player_tile[0]] != 0:
+                target_tile = self.roam_target
+        
+        if self.tile_pos == self.roam_target:
+            self.roam_target = self.get_target(self.tiles)
+
+        if self.targets['roam']:
+            target_tile = self.roam_target
 
         self.step_timer += (dt / 60)
         if self.step_timer > self.step:
             path = find_path(self.tile_pos, target_tile, self.tiles, [0])
+            
             if path != None:
                 self.prev_pos = self.tile_pos
                 self.tile_pos = path[0]
             else:
                 self.prev_pos = self.tile_pos
-        
+                
             self.step_timer = 0
 
     def draw(self, screen, camera_pos):
@@ -58,3 +73,15 @@ class Monster:
         display_rect.y += camera_pos[1]
         pygame.draw.rect(screen, (255, 210, 0), display_rect)
 
+    def get_target(self, tiles):
+        roam_target = (
+            randint(0, len(tiles[1]) - 1),
+            randint(0, len(tiles) - 1)
+        )
+        while tiles[roam_target[1]][roam_target[0]] != 0:
+            roam_target = (
+                randint(0, len(tiles[1]) - 1),
+                randint(0, len(tiles) - 1)
+            )
+
+        return roam_target

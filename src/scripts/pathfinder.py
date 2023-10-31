@@ -2,7 +2,7 @@
 from copy import deepcopy
 
 
-def get_neighbors(position, tiles, mapSize):
+def get_neighbors(position, tiles, mapSize, while_list):
     neighbors = [
         (position[0], position[1] - 1),
         (position[0] + 1, position[1]),
@@ -28,7 +28,7 @@ def get_neighbors(position, tiles, mapSize):
             to_remove.append(neighbor)
             continue
 
-        if not tiles[neighbor[1]][neighbor[0]] in [0, 2, 3]:
+        if not tiles[neighbor[1]][neighbor[0]] in while_list:
             to_remove.append(neighbor)
     
     for neighbor in to_remove:
@@ -37,7 +37,7 @@ def get_neighbors(position, tiles, mapSize):
     return neighbors
 
 
-def find_path(start, target, tiles):
+def find_path(start, target, tiles, while_list):
     #tiles[start[1]][start[0]]
     new_tiles = deepcopy(tiles)
 
@@ -46,14 +46,13 @@ def find_path(start, target, tiles):
     while new_active != []:
         new_active = []
         for tile in activeTiles:
-            neighbors = get_neighbors(tile[0], new_tiles, (len(tiles), len(tiles[0])))
+            neighbors = get_neighbors(tile[0], new_tiles, (len(tiles), len(tiles[0])), while_list)
             
             for neighbor in neighbors:
 
                 new_active.append(
                     [neighbor, tile[1] + [neighbor]]
                 )
-                
 
                 if neighbor[0] == target[0] and neighbor[1] == target[1]:
                     return tile[1] + [neighbor]

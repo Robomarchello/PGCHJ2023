@@ -23,37 +23,65 @@ class Player:
             1)
         self.mouse_move *= 0.1
     
-    def update(self, dt):
+    def update(self, dt, tileRects):
         moveVec = pygame.Vector2(0, 0)
         if self.move_dir['left']:
             moveVec[0] = -1
         if self.move_dir['right']:
             moveVec[0] = 1
-
         if self.move_dir['up']:
             moveVec[1] = -1
         if self.move_dir['down']:
             moveVec[1] = 1
 
         if moveVec.xy != (0, 0):
-            self.position += moveVec.normalize() * self.speed * dt
+            velocity = moveVec.normalize() * self.speed * dt
+
+            self.move_player(velocity, tileRects)
 
         mouse_offset = (self.center - Mouse.position).elementwise() * self.mouse_move
 
-        self.camera_pos = [
-            -self.position[0],
-            -self.position[1]
-        ]
+        self.camera_pos = self.center - self.rect.center
         self.camera_pos -= mouse_offset
-        
-        
-        self.rect.center = self.center
-        self.rect.topleft += self.position
-        self.rect.topleft += self.camera_pos
-        #self.rect.topleft -= mouse_offset
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (255, 0, 0), self.rect)
+        display_rect = self.rect.copy()
+        display_rect.x += self.camera_pos[0]
+        display_rect.y += self.camera_pos[1]
+        pygame.draw.rect(screen, (255, 0, 0), display_rect)
+
+    def get_collide(self, rect, tileRects):
+        collided = []
+        for tileRect in tileRects:
+            if tileRect.colliderect(rect):
+                collided.append(tileRect)
+        
+        return collided
+    
+    def move_player(self, velocity, rects):
+        self.position[0] += velocity[0]
+        self.rect.x = self.position[0]
+        collisions = self.get_collide(self.rect, rects)
+        for collision in collisions:
+            if velocity[0] > 0:
+                self.rect.right = collision.left
+                self.position[0] = self.rect.x
+
+            if velocity[0] < 0:
+                self.rect.left = collision.right
+                self.position[0] = self.rect.x
+
+        self.position[1] += velocity[1]
+        self.rect.y = self.position[1]
+        collisions = self.get_collide(self.rect, rects)
+        for collision in collisions:
+            if velocity[1] > 0:
+                self.rect.bottom = collision.top
+                self.position[1] = self.rect.y
+
+            if velocity[1] < 0:
+                self.rect.top = collision.bottom
+                self.position[1] = self.rect.y
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

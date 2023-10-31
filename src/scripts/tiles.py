@@ -10,18 +10,29 @@ class Level:
 
         self.tileSize = tileSize
 
+        self.tileRects = []
+
     def draw(self, screen, offset):
+        self.screenRect.topleft = -offset
+        self.tileRects = []
         for y, row in enumerate(self.tiles):
             for x, tile in enumerate(row):
                 rect = pygame.Rect(
-                    x * self.tileSize + offset[0], y * self.tileSize + offset[1],
+                    x * self.tileSize, y * self.tileSize,
                     self.tileSize, self.tileSize
                 )
+                display_rect = rect.copy()
+                display_rect.x += offset[0]
+                display_rect.y += offset[1]
 
                 if not self.screenRect.colliderect(rect):
                     continue
 
                 if tile == 1:
-                    pygame.draw.rect(screen, (105, 105, 105), rect)
+                    pygame.draw.rect(screen, (105, 105, 105), display_rect)
+                    self.tileRects.append(rect)
 
-                pygame.draw.rect(screen, (0, 0, 0), rect, width=1)
+                if tile == 2:
+                    pygame.draw.rect(screen, (150, 150, 150), display_rect)
+
+                pygame.draw.rect(screen, (0, 0, 0), display_rect, width=1)

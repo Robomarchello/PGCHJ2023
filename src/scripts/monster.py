@@ -24,7 +24,6 @@ class Monster:
             'roam': False
         }
 
-        #self.rotation = sin(...)
 
     def move(self, dt):
         player_rect = self.player.rect

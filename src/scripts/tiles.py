@@ -9,8 +9,9 @@ class Level:
             self.tiles = load(file)['level']
 
         self.tileSize = tileSize
-
         self.tileRects = []
+
+        self.vents = False
 
     def draw(self, screen, offset):
         self.screenRect.topleft = -offset

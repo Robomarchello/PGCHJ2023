@@ -35,6 +35,10 @@ class ItemHandler:
     def draw(self, screen, cam_pos):
         for item in self.items:
             item.draw(screen, cam_pos)
+ 
+    def finish(self):
+        if len(self.items) == 0:
+            print('go to the exit door')
 
     def handle_event(self, event):
         if event.type == KEYDOWN:
@@ -42,3 +46,5 @@ class ItemHandler:
                 for item in self.items:
                     if self.player.rect.colliderect(item.rect):
                         self.items.remove(item)
+
+                    self.finish()

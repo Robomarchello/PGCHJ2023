@@ -1,10 +1,6 @@
 import pygame
 from pygame.locals import *
-from src.scripts.tiles import Level
-from src.scripts.pathfinder import find_path
-from src.scripts.player import Player
 from src.scripts.mouse import Mouse
-from src.scripts.states.state import State
 from src.scripts.states.game import Game 
 import asyncio
 

@@ -25,7 +25,12 @@ class Game(State):
 
         #stats
         self.playtime = 0.0
+        self.input_n = 0
+        self.mouse_miles = 0
 
+        # if windows username == baconinvader
+        # scare him😈😈😈
+        
     def draw(self, dt):
         screen = self.screen
 
@@ -43,5 +48,8 @@ class Game(State):
         self.monster.draw(screen, self.player.camera_pos)
 
     def handle_event(self, event):
+        if event.type == KEYDOWN:
+            self.input_n += 1
+
         self.player.handle_event(event)
         self.ItemHandler.handle_event(event)

@@ -7,6 +7,7 @@ from src.scripts.player import Player
 from src.scripts.monster import Monster, Follower
 from src.scripts.items import ItemHandler
 from src.scripts.oxygen_bar import OxygenBar
+from src.scripts.audio_handler import SoundSource, AudioHandler
 
 
 class Game(State):
@@ -32,9 +33,22 @@ class Game(State):
 
         self.OxygenBar = OxygenBar(self.player, tileSize, self.map.tiles)
 
+        self.noise = AudioHandler.sounds['noise']
+        self.noise.play(-1)
+        monster_sounds = AudioHandler.sounds['zombie']
+        self.monster_source = SoundSource(
+            monster_sounds, 
+            self.player.position, self.monster.real_pos
+        )
+        self.monster_source.play()
+
         #stats
         self.playtime = 0.0
         self.input_n = 0
+
+        self.app = app
+
+        self.vignette = pygame.image.load('src/assets/vignette.png').convert_alpha()
 
         # if windows username == baconinvader
         # then scare him😈😈😈
@@ -59,8 +73,14 @@ class Game(State):
 
         self.OxygenBar.draw(screen)
 
+        self.monster_source.update(self.monster.real_pos, self.player.position)
+
+        self.screen.blit(self.vignette, (0, 0))
+
         if (self.player.position - self.monster.real_pos).length() < 50:
-            print('game over')
+            self.app.change_state('game_over')
+            self.monster_source.stop()
+            self.noise.stop()
 
     def restart(self):
         pass

@@ -15,6 +15,7 @@ class App:
         self.screen = pygame.display.set_mode(self.ScreenSize)
         pygame.display.set_caption('GAME NAME')
 
+
         self.clock = pygame.time.Clock()
         self.fps = 0
 
@@ -22,7 +23,7 @@ class App:
 
         self.states = {
             'game': Game(self.screen, self.ScreenSize, self),
-            'jumpscare': (self)
+            'game_over': GameOver(self.screen, self.ScreenSize, self)
         }
         
         self.crnt_state = 'game'
@@ -47,12 +48,24 @@ class App:
             pygame.display.update()
 
             await asyncio.sleep(0)
-    
+
+    def change_state(self, state):
+        self.crnt_state = state
+        self.state = self.states[self.crnt_state]
+
+        if state == 'game_over':
+            self.states[self.crnt_state].scare(self.screen)
+
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 raise SystemExit
+            
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    raise SystemExit        
             
             for event_handler in self.event_handlers:
                 event_handler.handle_event(event)

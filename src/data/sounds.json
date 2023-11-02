@@ -1,11 +1,27 @@
 {
     "noise": {
         "sound": "noise.ogg",
-        "volume": 1.0
+        "volume": 0.3
     },
 
     "scare_snd": {
         "sound": "scare.ogg",
+        "volume": 1.0
+    },
+    "zombie": {
+        "sound": "zombie.ogg",
+        "volume": 1.0
+    },
+    "pickup1": {
+        "sound": "pickup1.ogg",
+        "volume": 1.0
+    },
+    "pickup2": {
+        "sound": "pickup2.ogg",
+        "volume": 1.0
+    },
+    "pickup3": {
+        "sound": "pickup3.ogg",
         "volume": 1.0
     }
 }

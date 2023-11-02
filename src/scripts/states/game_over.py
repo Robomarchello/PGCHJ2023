@@ -10,29 +10,35 @@ class GameOver(State):
 
         self.ScreenSize = ScreenSize
 
-        self.sound = AudioHandler.sounds['scare']
-        self.last_screen = screen
+        self.sound = AudioHandler.sounds['scare_snd']
+        self.screen = screen
+        self.last_screen = screen.copy()
 
         self.channel = None
 
         self.black_time = 3
         self.timer = 0.0
 
+        self.app = app
+
     def scare(self, screen):
         self.channel = self.sound.play()
         
         self.last_screen = screen.copy()
 
-    def draw(self, screen, dt):
+    def draw(self, dt):
+        self.screen.blit(self.last_screen, (0, 0))
         if not self.channel.get_busy():
-            screen.fill((0, 0, 0))
+            self.screen.fill((0, 0, 0))
 
             if self.timer < self.black_time:
                 self.timer += dt
             else:
-                App.crnt_state = 'game'
+                # back to game
+                ...
         else:
             # jump scare
             ...
+
     def handle_event(self, event):
         pass

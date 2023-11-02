@@ -16,10 +16,11 @@ class SoundSource:
 
         self.up = Vector2(0, -1)
 
-    def update(self, target):
+    def update(self, target, location):
         self.target.update(target)
+        self.location.update(location)
         diff = self.location - self.target
-        distance = diff.length()
+        distance = diff.length() // 2
         if distance > 255:
             distance = 255
         angle = diff.angle_to(self.up)
@@ -31,17 +32,23 @@ class SoundSource:
         self.start = True
         self.channels.append(self.sound.play(-1))
 
+    def stop(self):
+        self.start = False
+        for channel in self.channels:
+            channel.stop()
+
 
 class AudioHandler:
     sounds = {}
+    volumes = []
     with open('src/data/sounds.json') as file:
         data = load(file)
         for path in data:
-            #print(f'src/sfx/{data[path]['sound']}')
-            sounds[path] = {
-                'sound': pygame.mixer.Sound(f'src/sfx/{data[path]['sound']}'),
-                'volume': data[path]['volume']
-                } 
+            volume = data[path]['volume']
+            volumes.append(volume)
+            
+            sounds[path] = pygame.mixer.Sound(f'src/sfx/{data[path]['sound']}')
+            sounds[path].set_volume(volume)
 
     @classmethod
     def set_volume(cls, volume):

@@ -1,6 +1,8 @@
 import pygame
 from pygame.locals import *
 from json import load
+from random import choice
+from .audio_handler import AudioHandler
 
 
 class Item:
@@ -34,6 +36,12 @@ class ItemHandler:
 
         self.open_exit = False
 
+        self.pickup_sounds = [
+            AudioHandler.sounds['pickup1'],
+            AudioHandler.sounds['pickup2'],
+            AudioHandler.sounds['pickup3']
+        ]
+
     def draw(self, screen, cam_pos):
         for item in self.items:
             item.draw(screen, cam_pos)
@@ -49,5 +57,7 @@ class ItemHandler:
                 for item in self.items:
                     if self.player.rect.colliderect(item.rect):
                         self.items.remove(item)
+
+                        choice(self.pickup_sounds).play()
 
                     self.finish()

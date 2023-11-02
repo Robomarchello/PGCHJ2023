@@ -8,6 +8,7 @@ from src.scripts.monster import Monster, Follower
 from src.scripts.items import ItemHandler
 from src.scripts.oxygen_bar import OxygenBar
 from src.scripts.audio_handler import SoundSource, AudioHandler
+from src.scripts.message import Messager
 
 
 class Game(State):
@@ -15,6 +16,7 @@ class Game(State):
         super().__init__(screen)
 
         self.ScreenSize = ScreenSize
+        self.app = app
 
         tileSize = 50
 
@@ -23,13 +25,6 @@ class Game(State):
 
         self.map = Level('src/data/level1.json', self.ScreenSize, tileSize, self.ItemHandler)
         self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
-        
-        n_follow = 3
-        self.followers = []
-        for follow_i in range(n_follow):
-            follower = Follower(
-            (100, 100), 20, None, self.monster.real_pos, 30)
-            self.followers.append(follower)
 
         self.OxygenBar = OxygenBar(self.player, tileSize, self.map.tiles)
 
@@ -41,18 +36,21 @@ class Game(State):
             self.player.position, self.monster.real_pos
         )
         self.monster_source.play()
-
-        #stats
-        self.playtime = 0.0
-        self.input_n = 0
-
-        self.app = app
-
+        
         self.vignette = pygame.image.load('src/assets/vignette.png').convert_alpha()
+
+        self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
 
         # if windows username == baconinvader
         # then scare him😈😈😈
         
+        self.finish_trigger = pygame.Rect(3150, 700, 100, 150)
+
+        #stats
+        self.playtime = 0.0
+        self.input_n = 0
+        self.deaths = 0
+
     def draw(self, dt):
         screen = self.screen
 
@@ -75,12 +73,23 @@ class Game(State):
 
         self.monster_source.update(self.monster.real_pos, self.player.position)
 
-        self.screen.blit(self.vignette, (0, 0))
+        self.Messager.draw(screen, dt)
 
-        if (self.player.position - self.monster.real_pos).length() < 50:
+        self.screen.blit(self.vignette, (0, 0))
+                
+        player_center = pygame.Vector2(self.player.rect.center)
+        monster_center = pygame.Vector2(self.monster.rect.center)
+
+        # Check if game is over
+        if (player_center - monster_center).length() < 40:
+            self.deaths += 1
             self.app.change_state('game_over')
             self.monster_source.stop()
             self.noise.stop()
+
+        # Check if game is finished
+        if self.player.rect.colliderect(self.finish_trigger):
+            print('yeah')
 
     def restart(self):
         pass

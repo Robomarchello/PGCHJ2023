@@ -3,7 +3,7 @@ from pygame.locals import *
 from random import randint
 from .pathfinder import find_path
 from math import sin
-
+ 
 
 class Monster:
     def __init__(self, player, tile_pos, tileSize, tiles):
@@ -11,7 +11,9 @@ class Monster:
         self.tiles = tiles
         self.prev_pos = tile_pos
         self.tile_pos = tile_pos
+
         self.real_pos = tile_pos
+        self.rect = pygame.Rect(self.real_pos, (self.tileSize, self.tileSize))
 
         self.player = player
         
@@ -21,8 +23,9 @@ class Monster:
         self.step_timer = 0
 
         self.targets = {
-            'player': True,
-            'roam': False
+            'player': False,
+            'roam': False,
+            'still': True
         }
 
         self.sprite = pygame.Surface((self.tileSize, self.tileSize), flags=SRCALPHA)
@@ -42,7 +45,7 @@ class Monster:
         )
 
         self.step_timer += (dt / 60)
-        if self.step_timer > self.step:
+        if self.step_timer > self.step and not self.targets['still']:
             if self.targets['player']:
                 target_tile = player_tile
 
@@ -54,7 +57,7 @@ class Monster:
 
             if self.targets['roam']:
                 target_tile = self.roam_target
-                
+            
             path = find_path(self.tile_pos, target_tile, self.tiles, [0])
             
             if path != None:
@@ -70,6 +73,7 @@ class Monster:
             self.tile_pos[0] * self.tileSize,
             self.tile_pos[1] * self.tileSize
         ]
+        self.rect.topleft = self.real_pos
 
     def draw(self, screen, camera_pos):
         interp = self.step_timer / self.step

@@ -11,11 +11,22 @@ class Item:
         self.rect = image.get_rect(topleft=position)
         self.name = name
 
+        black = pygame.mask.from_surface(self.image)
+        black = black.to_surface()
+        self.blurred = pygame.transform.invert(black)
+        self.blurred = pygame.transform.gaussian_blur(self.blurred, 5)
+        
+        self.blurred.set_alpha(150)
+        self.blurred_rect = self.blurred.get_rect()
+
     def draw(self, screen, cam_pos):
         display_rect = self.rect.copy()
         display_rect.x += cam_pos[0]
         display_rect.y += cam_pos[1]
         
+        blurred_rect = display_rect.copy()
+
+        screen.blit(self.blurred, blurred_rect.topleft)
         screen.blit(self.image, display_rect.topleft)
 
 
@@ -34,7 +45,7 @@ class ItemHandler:
 
         self.player = player
 
-        self.open_exit = False
+        self.open_exit = True
 
         self.pickup_sounds = [
             AudioHandler.sounds['pickup1'],

@@ -16,8 +16,7 @@ class GameOver(State):
 
         self.channel = None
 
-        self.black_time = 3
-        self.timer = 0.0
+        self.jump_scare = pygame.image.load('src/assets/jumpscare.png').convert()
 
         self.app = app
 
@@ -30,15 +29,10 @@ class GameOver(State):
         self.screen.blit(self.last_screen, (0, 0))
         if not self.channel.get_busy():
             self.screen.fill((0, 0, 0))
-
-            if self.timer < self.black_time:
-                self.timer += dt
-            else:
-                # back to game
-                ...
         else:
-            # jump scare
-            ...
-
+            self.screen.blit(self.jump_scare, (0, 0))
+            
     def handle_event(self, event):
-        pass
+        if event.type == KEYDOWN:
+            if event.key == K_r:
+                print('restart')

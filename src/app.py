@@ -15,7 +15,6 @@ class App:
         self.screen = pygame.display.set_mode(self.ScreenSize)
         pygame.display.set_caption('GAME NAME')
 
-
         self.clock = pygame.time.Clock()
         self.fps = 0
 
@@ -44,6 +43,9 @@ class App:
 
             self.state.draw(dt)
 
+            #scaled_surf = pygame.transform.scale(surface, self.ScreenSize)
+            #screen.blit(scaled_surf, (0, 0))
+
             pygame.display.set_caption(str(self.clock.get_fps()))
             pygame.display.update()
 
@@ -52,6 +54,9 @@ class App:
     def change_state(self, state):
         self.crnt_state = state
         self.state = self.states[self.crnt_state]
+
+        if state == 'game':
+            self.states[self.crnt_state].restart()
 
         if state == 'game_over':
             self.states[self.crnt_state].scare(self.screen)

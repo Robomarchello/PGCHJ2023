@@ -18,15 +18,18 @@ class Game(State):
         self.ScreenSize = ScreenSize
         self.app = app
 
-        tileSize = 50
+        self.tileSize = 50
+
+        self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
 
         self.player = Player([480, 270], self.ScreenSize)
-        self.ItemHandler = ItemHandler('src/data/items.json', self.player)
+        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager)
 
-        self.map = Level('src/data/level1.json', self.ScreenSize, tileSize, self.ItemHandler)
+        self.map = Level('src/data/level1.json', self.ScreenSize, 
+                         self.tileSize, self.ItemHandler)
         self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
 
-        self.OxygenBar = OxygenBar(self.player, tileSize, self.map.tiles)
+        self.OxygenBar = OxygenBar(self.player, self.tileSize, self.map.tiles)
 
         self.noise = AudioHandler.sounds['noise']
         self.noise.play(-1)
@@ -38,8 +41,6 @@ class Game(State):
         self.monster_source.play()
         
         self.vignette = pygame.image.load('src/assets/vignette.png').convert_alpha()
-
-        self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
 
         # if windows username == baconinvader
         # then scare him😈😈😈
@@ -76,7 +77,7 @@ class Game(State):
         self.Messager.draw(screen, dt)
 
         self.screen.blit(self.vignette, (0, 0))
-                
+
         player_center = pygame.Vector2(self.player.rect.center)
         monster_center = pygame.Vector2(self.monster.rect.center)
 
@@ -92,7 +93,25 @@ class Game(State):
             print('yeah')
 
     def restart(self):
-        pass
+        self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
+
+        self.player = Player([480, 270], self.ScreenSize)
+        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager)
+
+        self.map = Level('src/data/level1.json', self.ScreenSize, 
+                         self.tileSize, self.ItemHandler)
+        self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
+
+        self.OxygenBar = OxygenBar(self.player, self.tileSize, self.map.tiles)
+
+        self.noise = AudioHandler.sounds['noise']
+        self.noise.play(-1)
+        monster_sounds = AudioHandler.sounds['zombie']
+        self.monster_source = SoundSource(
+            monster_sounds, 
+            self.player.position, self.monster.real_pos
+        )
+        self.monster_source.play()
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

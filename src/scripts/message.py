@@ -14,7 +14,6 @@ class Messager:
 
         self.messages = []
         self.new_message('test', 3)
-        print('here')
 
         self.timer = 0.0
         self.fade_max = 0.5
@@ -28,6 +27,7 @@ class Messager:
                 self.timer += dt / 60
             else:
                 self.messages.pop(0)
+                self.timer = 0.0
 
             if self.timer < self.fade_max:
                 self.opacity = (self.timer / self.fade_max) * 255

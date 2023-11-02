@@ -3,7 +3,7 @@ from json import load
 
 
 class Level:
-    def __init__(self, path, ScreenSize, tileSize):
+    def __init__(self, path, ScreenSize, tileSize, itemHandler):
         self.screenRect = pygame.Rect((0, 0), ScreenSize)
         with open(path) as file:
             self.tiles = load(file)['level']
@@ -11,9 +11,26 @@ class Level:
         self.tileSize = tileSize
         self.tileRects = []
 
-        self.vents = False
+        self.itemHandler = itemHandler
 
-    def draw(self, screen, offset):
+        self.vents = False
+        self.start_anim = True
+        self.max_anim = 1.5
+        self.vent_anim = 0.0
+
+    def draw(self, screen, offset, dt):
+        if self.start_anim:
+            if self.vent_anim < self.max_anim:
+                self.vent_anim += dt / 60
+                self.alpha = (self.vent_anim / self.max_anim) * 255
+            else:
+                self.vents = True
+        else:
+            self.vents = False
+            self.vent_anim = 0.0
+            
+
+        # --- looping through tiles
         self.screenRect.topleft = -offset
         self.tileRects = []
         for y, row in enumerate(self.tiles):
@@ -28,7 +45,7 @@ class Level:
 
                 if not self.screenRect.colliderect(rect):
                     continue
-
+                
                 if tile == 1:
                     pygame.draw.rect(screen, (105, 105, 105), display_rect)
                     self.tileRects.append(rect)
@@ -36,4 +53,10 @@ class Level:
                 if tile == 2:
                     pygame.draw.rect(screen, (150, 150, 150), display_rect)
 
+                if tile == 4:
+                    pygame.draw.rect(screen, (125, 35, 0), display_rect)
+
+                    if not self.itemHandler.open_exit:
+                        self.tileRects.append(rect)
+                        
                 pygame.draw.rect(screen, (0, 0, 0), display_rect, width=1)

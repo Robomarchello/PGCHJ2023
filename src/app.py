@@ -1,67 +1,66 @@
 import pygame
 from pygame.locals import *
 from src.scripts.mouse import Mouse
-from src.scripts.states.game import Game 
+from src.scripts.states import *
+from src.scripts.audio_handler import AudioHandler
 import asyncio
-
 
 pygame.init()
 
 
 class App:
-    ScreenSize = (960, 540)
+    def __init__(self):
+        self.ScreenSize = (960, 540)
 
-    screen = pygame.display.set_mode(ScreenSize)
-    pygame.display.set_caption('GAME NAME')
+        self.screen = pygame.display.set_mode(self.ScreenSize)
+        pygame.display.set_caption('GAME NAME')
 
-    clock = pygame.time.Clock()
-    fps = 0
+        self.clock = pygame.time.Clock()
+        self.fps = 0
 
-    dt = 1
+        self.dt = 1
 
-    states = {
-        'game': Game(screen, ScreenSize)
-    }
-    
-    crnt_state = 'game'
-    state = states[crnt_state]
-    
-    event_handlers = [Mouse]
+        self.states = {
+            'game': Game(self.screen, self.ScreenSize, self),
+            'jumpscare': (self)
+        }
+        
+        self.crnt_state = 'game'
+        self.state = self.states[self.crnt_state]
+        
+        self.event_handlers = [Mouse]
 
-    @classmethod
-    async def loop(cls):
-        screen = cls.screen
+    async def loop(self):
+        screen = self.screen
         while True:
-            cls.clock.tick(cls.fps)
-            dt = cls.get_dt()
+            self.clock.tick(self.fps)
+            dt = self.get_dt()
 
-            cls.handle_events()
+            self.handle_events()
             Mouse.update()
              
             screen.fill((255, 255, 255))
 
-            cls.state.draw(dt)
+            self.state.draw(dt)
 
-            pygame.display.set_caption(str(cls.clock.get_fps()))
+            pygame.display.set_caption(str(self.clock.get_fps()))
             pygame.display.update()
 
             await asyncio.sleep(0)
     
-    @classmethod
-    def handle_events(cls):
+    def handle_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 raise SystemExit
             
-            for event_handler in cls.event_handlers:
+            for event_handler in self.event_handlers:
                 event_handler.handle_event(event)
 
-            cls.state.handle_event(event)
+            self.state.handle_event(event)
             
-    @classmethod
-    def get_dt(cls):
-        fps = cls.clock.get_fps()
+    def get_dt(self):
+        fps = self.clock.get_fps()
 
         if fps > 10:
             return (1 / fps) * 60

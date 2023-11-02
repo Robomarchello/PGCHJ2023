@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from random import uniform
 from .mouse import Mouse
 
 
@@ -22,6 +23,10 @@ class Player:
             ScreenSize[1] / ScreenSize[0],
             1)
         self.mouse_move *= 0.15
+
+        self.shake_magn = 3
+        self.shake = (0, 0)
+        self.shake_dist = 300
     
     def update(self, dt, tileRects):
         moveVec = pygame.Vector2(0, 0)
@@ -43,6 +48,7 @@ class Player:
 
         self.camera_pos = self.center - self.rect.center
         self.camera_pos -= mouse_offset
+        self.camera_pos += self.shake
 
     def draw(self, screen):
         display_rect = self.rect.copy()
@@ -82,6 +88,18 @@ class Player:
             if velocity[1] < 0:
                 self.rect.top = collision.bottom
                 self.position[1] = self.rect.y
+
+    def calculate_shake(self, monster):
+        center = pygame.Vector2(self.rect.center)
+        length = (center - monster.real_pos).length()
+        
+        if length < self.shake_dist:
+            shakiness = round((1 - length / self.shake_dist) * self.shake_magn, 2)
+            self.shake = (
+                uniform(-shakiness, shakiness), 
+                uniform(-shakiness, shakiness)
+            )
+
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

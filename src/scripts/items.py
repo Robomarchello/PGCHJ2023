@@ -32,6 +32,8 @@ class ItemHandler:
 
         self.player = player
 
+        self.open_exit = False
+
     def draw(self, screen, cam_pos):
         for item in self.items:
             item.draw(screen, cam_pos)
@@ -39,6 +41,7 @@ class ItemHandler:
     def finish(self):
         if len(self.items) == 0:
             print('go to the exit door')
+            self.open_exit = True
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

@@ -4,32 +4,40 @@ from pygame.locals import *
 from src.scripts.mouse import Mouse
 from src.scripts.tiles import Level
 from src.scripts.player import Player
-from src.scripts.monster import Monster
+from src.scripts.monster import Monster, Follower
 from src.scripts.items import ItemHandler
-
-pygame.font.init()
+from src.scripts.oxygen_bar import OxygenBar
 
 
 class Game(State):
-    def __init__(self, screen, ScreenSize):
+    def __init__(self, screen, ScreenSize, app):
         super().__init__(screen)
 
         self.ScreenSize = ScreenSize
 
-        self.map = Level('src/level.json', self.ScreenSize, 50)
+        tileSize = 50
 
         self.player = Player([480, 270], self.ScreenSize)
-        self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
+        self.ItemHandler = ItemHandler('src/data/items.json', self.player)
 
-        self.ItemHandler = ItemHandler('src/items.json', self.player)
+        self.map = Level('src/data/level1.json', self.ScreenSize, tileSize, self.ItemHandler)
+        self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
+        
+        n_follow = 3
+        self.followers = []
+        for follow_i in range(n_follow):
+            follower = Follower(
+            (100, 100), 20, None, self.monster.real_pos, 30)
+            self.followers.append(follower)
+
+        self.OxygenBar = OxygenBar(self.player, tileSize, self.map.tiles)
 
         #stats
         self.playtime = 0.0
         self.input_n = 0
-        self.mouse_miles = 0
 
         # if windows username == baconinvader
-        # scare him😈😈😈
+        # then scare him😈😈😈
         
     def draw(self, dt):
         screen = self.screen
@@ -39,13 +47,23 @@ class Game(State):
         self.playtime += dt
 
         self.player.update(dt, self.map.tileRects)
-        self.monster.move(dt)
+        self.monster.update(dt)
+        self.player.calculate_shake(self.monster)
+        self.OxygenBar.update(dt)
 
-        self.map.draw(screen, self.player.camera_pos)
+        self.map.draw(screen, self.player.camera_pos, dt)
         
-        self.ItemHandler.draw(screen, self.player.camera_pos)
+        self.ItemHandler.draw(screen, self.player.camera_pos) 
         self.player.draw(screen)
         self.monster.draw(screen, self.player.camera_pos)
+
+        self.OxygenBar.draw(screen)
+
+        if (self.player.position - self.monster.real_pos).length() < 50:
+            print('game over')
+
+    def restart(self):
+        pass
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

@@ -1,0 +1,11 @@
+{
+    "noise": {
+        "sound": "noise.ogg",
+        "volume": 1.0
+    },
+
+    "scare_snd": {
+        "sound": "scare.ogg",
+        "volume": 1.0
+    }
+}

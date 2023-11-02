@@ -1,0 +1,18 @@
+{
+    "item1": {
+        "position": [200, 200],
+        "image": "src/assets/item.png"
+    },
+    "item2": {
+        "position": [600, 600],
+        "image": "src/assets/item.png"
+    },
+    "item3": {
+        "position": [200, 700],
+        "image": "src/assets/item.png"
+    },
+    "item4": {
+        "position": [200, 200],
+        "image": "src/assets/item.png"
+    }
+}

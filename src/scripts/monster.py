@@ -11,6 +11,7 @@ class Monster:
         self.tiles = tiles
         self.prev_pos = tile_pos
         self.tile_pos = tile_pos
+        self.real_pos = tile_pos
 
         self.player = player
         
@@ -24,36 +25,51 @@ class Monster:
             'roam': False
         }
 
+        self.sprite = pygame.Surface((self.tileSize, self.tileSize), flags=SRCALPHA)
+        self.sprite.fill((200, 150, 0))
+        self.rotation = 0
+        self.counter = 0
 
-    def move(self, dt):
+    def update(self, dt):
+        self.counter += dt / 10
+        self.rotation = sin(self.counter) * 15
+        
+        # move & interpolate monster
         player_rect = self.player.rect
         player_tile = (
             (player_rect.x // self.tileSize),
             (player_rect.y // self.tileSize)
         )
-        if self.targets['player']:
-            target_tile = player_tile
-
-            if self.tiles[player_tile[1]][player_tile[0]] != 0:
-                target_tile = self.roam_target
-        
-        if self.tile_pos == self.roam_target:
-            self.roam_target = self.get_target(self.tiles)
-
-        if self.targets['roam']:
-            target_tile = self.roam_target
 
         self.step_timer += (dt / 60)
         if self.step_timer > self.step:
+            if self.targets['player']:
+                target_tile = player_tile
+
+                if self.tiles[player_tile[1]][player_tile[0]] != 0:
+                    target_tile = self.roam_target
+            
+            if self.tile_pos == self.roam_target:
+                self.roam_target = self.get_target(self.tiles)
+
+            if self.targets['roam']:
+                target_tile = self.roam_target
+                
             path = find_path(self.tile_pos, target_tile, self.tiles, [0])
             
             if path != None:
                 self.prev_pos = self.tile_pos
                 self.tile_pos = path[0]
             else:
+                target_tile = self.roam_target
                 self.prev_pos = self.tile_pos
                 
             self.step_timer = 0
+
+        self.real_pos = [
+            self.tile_pos[0] * self.tileSize,
+            self.tile_pos[1] * self.tileSize
+        ]
 
     def draw(self, screen, camera_pos):
         interp = self.step_timer / self.step
@@ -72,7 +88,11 @@ class Monster:
         display_rect = rect.copy()
         display_rect.x += camera_pos[0]
         display_rect.y += camera_pos[1]
-        pygame.draw.rect(screen, (255, 210, 0), display_rect)
+
+        rotated = pygame.transform.rotate(self.sprite, self.rotation)
+        rotatedRect = rotated.get_rect(center=display_rect.center)
+        screen.blit(rotated, rotatedRect)
+        #pygame.draw.rect(screen, (255, 210, 0), display_rect)
 
     def get_target(self, tiles):
         roam_target = (
@@ -86,3 +106,45 @@ class Monster:
             )
 
         return roam_target
+
+
+class Follower:
+    def __init__(self, position, radius, image, target, targetRadius):
+        self.position = pygame.Vector2(position)
+        self.radius = radius
+        self.image = image
+        self.rect = pygame.Rect(0, 0, self.radius * 2, self.radius * 2)
+        self.rect.center = self.position #self.image.get_rect(topleft=self.position)
+
+        self.target = pygame.Vector2(target)
+        self.targetRadius = targetRadius
+
+        self.speed = 4
+    
+    def update(self, target, dt, tileRects):
+        self.target.update(target)
+
+        diff = (self.target - self.position)
+        if diff.xy != (0, 0):
+            diff_norm = diff.normalize()
+
+            if diff.length() - self.radius - self.targetRadius > 0:
+                self.position += diff_norm * self.speed * dt
+
+            if diff.length() > 350:
+                self.position = self.target.copy()
+
+        self.rect.center = self.position
+        for rect in tileRects:
+            if self.rect.colliderect(rect):
+                diff = pygame.Vector2(self.rect.center) - rect.center
+                if diff.xy != (0, 0):
+                    diff_norm = diff.normalize() * 2
+                    self.position += diff_norm
+                    self.rect.center = self.position
+
+    def draw(self, screen, cam_pos):
+        display_pos = self.position.copy()
+        display_pos += cam_pos
+
+        pygame.draw.circle(screen, (0, 255, 0), display_pos, self.radius)

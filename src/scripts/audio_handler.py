@@ -6,7 +6,7 @@ pygame.mixer.init()
 
 
 class SoundSource:
-    def __init__(self, sound, location, target, loop):
+    def __init__(self, sound, location, target):
         self.sound = sound
         self.location = Vector2(location)
         self.target = Vector2(target)
@@ -29,17 +29,18 @@ class SoundSource:
 
     def play(self):
         self.start = True
-        self.channels.append(self.sound.play())
+        self.channels.append(self.sound.play(-1))
 
 
 class AudioHandler:
     sounds = {}
-    with open('folder_to_enter') as file:
+    with open('src/data/sounds.json') as file:
         data = load(file)
         for path in data:
+            #print(f'src/sfx/{data[path]['sound']}')
             sounds[path] = {
-                'sound': pygame.mixer.Sound(f'src/sfx/{data[path]}'),
-                'volume': data['volume']
+                'sound': pygame.mixer.Sound(f'src/sfx/{data[path]['sound']}'),
+                'volume': data[path]['volume']
                 } 
 
     @classmethod

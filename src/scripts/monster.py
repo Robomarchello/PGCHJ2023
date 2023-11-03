@@ -19,7 +19,7 @@ class Monster:
         
         self.roam_target = self.get_target(tiles)
 
-        self.step = 0.16
+        self.step = 0.145
         self.step_timer = 0
 
         self.visible = False

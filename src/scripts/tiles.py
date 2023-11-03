@@ -61,19 +61,16 @@ class Level:
 
                 # grass
                 if tile == 2:
-                    pygame.draw.rect(screen, (0, 100, 0), display_rect)
                     screen.blit(self.grass, display_rect.topleft)
 
                 # unwalkable grass
                 if tile == 3:
-                    pygame.draw.rect(screen, (0, 150, 0), display_rect)
                     self.tileRects.append(rect)
                     screen.blit(self.grass, display_rect.topleft)
                     
 
                 # floor
                 if tile == 4:
-                    pygame.draw.rect(screen, (180, 180, 180), display_rect)
                     screen.blit(self.floor, display_rect.topleft)
                 
                 # vents
@@ -82,13 +79,18 @@ class Level:
 
                 # exit door                
                 if tile == 6:
-                    pygame.draw.rect(screen, (125, 35, 0), display_rect)
                     if not self.itemHandler.open_exit:
                         self.tileRects.append(rect)
+                    
+                        pygame.draw.rect(screen, ((125, 35, 0)), display_rect) 
+                    else:  
+                        pygame.draw.rect(screen, ((150, 60, 0)), display_rect) 
+                    
+                    pygame.draw.rect(screen, ((125, 35, 0)), display_rect) 
 
                 # unwalkable for monster
                 if tile == 7:
-                    pygame.draw.rect(screen, (180, 180, 180), display_rect)    
+                    screen.blit(self.floor, display_rect.topleft)
 
                 if tile == 8:
                     if self.game.closed:

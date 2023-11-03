@@ -30,5 +30,9 @@
     "pickup3": {
         "sound": "pickup3.ogg",
         "volume": 1.0
+    },
+    "yippie": {
+        "sound": "finish.ogg",
+        "volume": 1.0
     }
 }

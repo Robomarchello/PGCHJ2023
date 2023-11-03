@@ -61,7 +61,6 @@ class Monster:
             
             path = find_path(self.tile_pos, target_tile, self.tiles, [4])
 
-            
             if path != None:
                 self.prev_pos = self.tile_pos
                 self.tile_pos = path[0]

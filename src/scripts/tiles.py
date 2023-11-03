@@ -19,7 +19,8 @@ class Level:
         self.grass = pygame.image.load('src/assets/grass.png').convert()
 
         #self.tile_map = pygame.image.load('src/assets/tile_map.png')
-        #self.tile_map = spritesheet_from_file('src/data/tiles.json)
+        #self.tile_map = spritesheet_from_file('src/data/tiles.json')
+        
         self.vents = False
         self.start_anim = True
         self.max_anim = 1.5

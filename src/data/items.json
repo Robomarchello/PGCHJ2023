@@ -1,22 +1,26 @@
 {
     "item1": {
         "position": [250, 950],
-        "image": "src/assets/item.png"
+        "image": "src/assets/crowbar.png"
     },
     "item2": {
         "position": [1500, 450],
-        "image": "src/assets/item.png"
+        "image": "src/assets/duck.png"
     },
     "item3": {
         "position": [1500, 1500],
-        "image": "src/assets/item.png"
+        "image": "src/assets/fish.png"
     },
     "item4": {
         "position": [3050, 1600],
-        "image": "src/assets/item.png"
+        "image": "src/assets/toilet.png"
     },
     "item5": {
         "position": [2250, 450],
-        "image": "src/assets/item.png"
+        "image": "src/assets/money.png"
+    },
+    "item6": {
+        "position": [1900, 750],
+        "image": "src/assets/keys.png"
     }
 }

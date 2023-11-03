@@ -15,8 +15,6 @@ class WinScreen(State):
             ScreenSize[1] // 2
         ]
 
-
-
         self.font = pygame.font.Font('src/assets/font.ttf', 64)
 
         self.timer = 0.0
@@ -32,6 +30,8 @@ class WinScreen(State):
         self.new_message('Made in 7 days for PGCHJ2023', 3)
         self.new_message('By RoboMarchello and Boopka', 2)
         self.new_message('Thanks for playing', 5)
+
+        self.finish_snd = AudioHandler.sounds['yippie']
 
     def draw(self, dt):
         '''
@@ -61,6 +61,7 @@ class WinScreen(State):
 
     def update_stats(self, game):
         self.messages = []
+        self.finish_snd.play()
         playtime = round(game.playtime / 60, 2)
         self.new_message('Congratulations!', 2)
         self.new_message('You\'ve Escaped!', 3)

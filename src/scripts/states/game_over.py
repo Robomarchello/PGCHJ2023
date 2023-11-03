@@ -1,6 +1,7 @@
 from .state import State
 import pygame
 from pygame.locals import *
+from random import uniform
 from src.scripts.audio_handler import AudioHandler
 
 
@@ -30,10 +31,15 @@ class GameOver(State):
         self.jump_scare = pygame.image.load('src/assets/jumpscare.png').convert()
         self.vents_scare = pygame.image.load('src/assets/jumpscare.png').convert()
 
+        self.scare_rect = self.jump_scare
+
         self.reasons = [
             'monster', 'oxygen'
         ]
         self.reason = 'monster'
+
+        self.shake = pygame.Vector2(0, 0)
+        self.magnitude = 5
 
         self.app = app
 
@@ -47,19 +53,29 @@ class GameOver(State):
             self.channel = self.sound.play()
             
             self.last_screen = screen.copy()
-        
+
     def draw(self, dt):
-        self.screen.blit(self.last_screen, (0, 0))
+        self.calculate_shake(self.magnitude)
         if not self.channel.get_busy():
             self.screen.fill((0, 0, 0))
 
             self.screen.blit(self.restart_text, self.restart_rect.topleft)
 
         else:
-            self.screen.blit(self.jump_scare, (0, 0))
-            
+            rect_new = self.jump_scare.get_rect(center=self.center)
+            self.calculate_shake(self.magnitude)
+            rect_new.x += self.shake[0]
+            rect_new.y += self.shake[1]
+
+            self.screen.blit(self.jump_scare, rect_new.topleft)
+
+    def calculate_shake(self, magnitude):
+        self.shake.update(
+            uniform(-magnitude, magnitude), 
+            uniform(-magnitude, magnitude)
+        )
+
     def handle_event(self, event):
         if event.type == KEYDOWN:
             if event.key == K_r:
                 self.app.change_state('game')
-                self

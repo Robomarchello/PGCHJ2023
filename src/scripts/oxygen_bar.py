@@ -48,7 +48,7 @@ class OxygenBar:
 
         if self.anim:
             if self.anim_timer < self.max_anim:
-                self.anim_timer += dt / 60
+                self.anim_timer += dt / 60 
 
             if self.in_vent > 0:
                 self.in_vent -= dt / 60
@@ -58,7 +58,7 @@ class OxygenBar:
                 self.anim_timer -= dt / 60
 
             if self.in_vent < self.vent_time:
-                self.in_vent += dt / 60
+                self.in_vent += (dt / 60) * 1.7
                 
         new_y = self.rect.y + (self.anim_timer / self.max_anim) * self.y_move
         self.anim_rect.y = new_y

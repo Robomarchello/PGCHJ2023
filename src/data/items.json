@@ -1,18 +1,22 @@
 {
     "item1": {
-        "position": [200, 200],
+        "position": [250, 950],
         "image": "src/assets/item.png"
     },
     "item2": {
-        "position": [600, 600],
+        "position": [1500, 450],
         "image": "src/assets/item.png"
     },
     "item3": {
-        "position": [200, 700],
+        "position": [1500, 1500],
         "image": "src/assets/item.png"
     },
     "item4": {
-        "position": [200, 200],
+        "position": [3050, 1600],
+        "image": "src/assets/item.png"
+    },
+    "item5": {
+        "position": [2250, 450],
         "image": "src/assets/item.png"
     }
 }

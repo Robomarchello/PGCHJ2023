@@ -3,6 +3,10 @@
         "sound": "noise.ogg",
         "volume": 0.3
     },
+    "door": {
+        "sound": "door.ogg",
+        "volume": 1.0
+    },
 
     "scare_snd": {
         "sound": "scare.ogg",

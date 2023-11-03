@@ -3,7 +3,7 @@ from json import load
 
 
 class Level:
-    def __init__(self, path, ScreenSize, tileSize, itemHandler):
+    def __init__(self, path, ScreenSize, tileSize, itemHandler, game):
         self.screenRect = pygame.Rect((0, 0), ScreenSize)
         with open(path) as file:
             self.tiles = load(file)['level']
@@ -12,6 +12,7 @@ class Level:
         self.tileRects = []
 
         self.itemHandler = itemHandler
+        self.game = game
 
         self.vents = False
         self.start_anim = True
@@ -76,7 +77,15 @@ class Level:
 
                 # unwalkable for monster
                 if tile == 7:
-                    pygame.draw.rect(screen, (180, 180, 180), display_rect)                
+                    pygame.draw.rect(screen, (180, 180, 180), display_rect)    
+
+                if tile == 8:
+                    if self.game.closed:
+                        self.tileRects.append(rect)
+                    
+                        pygame.draw.rect(screen, ((125, 35, 0)), display_rect) 
+                    else:  
+                        pygame.draw.rect(screen, ((150, 60, 0)), display_rect) 
 
                 '''if tile == 1:
                     pygame.draw.rect(screen, (105, 105, 105), display_rect)

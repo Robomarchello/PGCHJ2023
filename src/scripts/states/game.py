@@ -23,16 +23,17 @@ class Game(State):
         self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
 
         self.player = Player([480, 270], self.ScreenSize)
-        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager)
+        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager, self)
 
         self.map = Level('src/data/level1.json', self.ScreenSize, 
-                         self.tileSize, self.ItemHandler)
-        self.monster = Monster(self.player, (2, 2), self.tileSize, self.map.tiles)
+                         self.tileSize, self.ItemHandler, self)
+        self.monster = Monster(self.player, (32, 32), self.tileSize, self.map.tiles)
 
         self.OxygenBar = OxygenBar(self.player, self.tileSize, self.map.tiles)
 
         self.noise = AudioHandler.sounds['noise']
         self.noise.play(-1)
+        self.door_snd = AudioHandler.sounds['door']
         monster_sounds = AudioHandler.sounds['zombie']
         self.monster_source = SoundSource(
             monster_sounds, 
@@ -41,8 +42,11 @@ class Game(State):
         self.monster_source.play()
         
         self.vignette = pygame.image.load('src/assets/vignette.png').convert_alpha()
-        
-        self.finish_trigger = pygame.Rect(3150, 700, 100, 150)
+
+        self.close_trigger = pygame.Rect(0, 700, 750, 100)
+        self.closed = False
+
+        self.finish_trigger = pygame.Rect(3050, 0, 100, 100)
 
         #stats
         self.playtime = 0.0
@@ -56,9 +60,9 @@ class Game(State):
     def draw(self, dt):
         screen = self.screen
 
-        screen.fill((255, 255, 255))
+        screen.fill((0, 0, 0))
 
-        self.playtime += dt
+        self.playtime += dt / 60
 
         self.player.update(dt, self.map.tileRects)
         self.monster.update(dt)
@@ -82,6 +86,10 @@ class Game(State):
         player_center = pygame.Vector2(self.player.rect.center)
         monster_center = pygame.Vector2(self.monster.rect.center)
 
+        if self.close_trigger.colliderect(self.player.rect) and not self.closed:
+            self.closed = True
+            self.door_snd.play()
+
         # Check if game is over
         if (player_center - monster_center).length() < 40:
             self.deaths += 1
@@ -100,11 +108,11 @@ class Game(State):
         self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)
 
         self.player = Player([480, 270], self.ScreenSize)
-        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager)
+        self.ItemHandler = ItemHandler('src/data/items.json', self.player, self.Messager, self)
 
         self.map = Level('src/data/level1.json', self.ScreenSize, 
-                         self.tileSize, self.ItemHandler)
-        self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
+                         self.tileSize, self.ItemHandler, self)
+        self.monster = Monster(self.player, (32, 32), 50, self.map.tiles)
 
         self.OxygenBar = OxygenBar(self.player, self.tileSize, self.map.tiles)
 

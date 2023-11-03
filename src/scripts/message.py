@@ -13,7 +13,7 @@ class Messager:
         ]
 
         self.messages = []
-        self.new_message('test', 3)
+        self.new_message('What is that strange building?', 3)
 
         self.timer = 0.0
         self.fade_max = 0.5

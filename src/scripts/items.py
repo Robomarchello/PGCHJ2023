@@ -31,7 +31,7 @@ class Item:
 
 
 class ItemHandler:
-    def __init__(self, filePath, player, messager):
+    def __init__(self, filePath, player, messager, game):
         with open(filePath) as file:
             data = load(file)
         
@@ -45,6 +45,7 @@ class ItemHandler:
 
         self.player = player
         self.messager = messager
+        self.game = game
 
         self.open_exit = True
 
@@ -99,7 +100,7 @@ class ItemHandler:
             )
         
         if picked_up == 1:
-            print('move the monster')
+            self.game.monster.target_player()
         
         
         choice(self.pickup_sounds).play()

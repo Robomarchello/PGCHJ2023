@@ -23,9 +23,9 @@ class Monster:
         self.step_timer = 0
 
         self.targets = {
-            'player': True,
+            'player': False,
             'roam': False,
-            'still': False
+            'still': True
         }
 
         self.sprite = pygame.Surface((self.tileSize, self.tileSize), flags=SRCALPHA)
@@ -98,6 +98,13 @@ class Monster:
         rotatedRect = rotated.get_rect(center=display_rect.center)
         screen.blit(rotated, rotatedRect)
         #pygame.draw.rect(screen, (255, 210, 0), display_rect)
+
+    def target_player(self):
+        self.targets = {
+            'player': True,
+            'roam': False,
+            'still': False
+        }
 
     def get_target(self, tiles):
         roam_target = (

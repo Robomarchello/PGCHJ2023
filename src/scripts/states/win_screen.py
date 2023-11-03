@@ -61,9 +61,10 @@ class WinScreen(State):
 
     def update_stats(self, game):
         self.messages = []
+        playtime = round(game.playtime / 60, 2)
         self.new_message('Congratulations!', 2)
         self.new_message('You\'ve Escaped!', 3)
-        self.new_message(f'You have been \n playing  for {game.playtime} minutes', 3)
+        self.new_message(f'You have been \n playing  for {playtime} minutes', 3)
         self.new_message(f'You died {game.deaths} times', 3)
         self.new_message('Made in 7 days for PGCHJ2023', 3)
         self.new_message('By RoboMarchello and Boopka', 2)

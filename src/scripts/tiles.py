@@ -17,6 +17,8 @@ class Level:
 
         self.floor = pygame.image.load('src/assets/floor.png').convert()
         self.grass = pygame.image.load('src/assets/grass.png').convert()
+        self.wall = pygame.image.load('src/assets/wall.png').convert()
+        self.vent_texture = pygame.image.load('src/assets/vents.png').convert()
 
         #self.tile_map = pygame.image.load('src/assets/tile_map.png')
         #self.tile_map = spritesheet_from_file('src/data/tiles.json')
@@ -57,6 +59,7 @@ class Level:
                 # wall
                 if tile == 1:
                     pygame.draw.rect(screen, (105, 105, 105), display_rect)
+                    screen.blit(self.wall, display_rect.topleft)
                     self.tileRects.append(rect)
 
                 # grass
@@ -67,7 +70,6 @@ class Level:
                 if tile == 3:
                     self.tileRects.append(rect)
                     screen.blit(self.grass, display_rect.topleft)
-                    
 
                 # floor
                 if tile == 4:
@@ -75,7 +77,7 @@ class Level:
                 
                 # vents
                 if tile == 5:
-                    pygame.draw.rect(screen, (130, 130, 130), display_rect)
+                    pygame.draw.rect(screen, (34, 32, 52), display_rect)
 
                 # exit door                
                 if tile == 6:

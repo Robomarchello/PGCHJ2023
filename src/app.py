@@ -3,6 +3,7 @@ from pygame.locals import *
 from src.scripts.mouse import Mouse
 from src.scripts.states import *
 from src.scripts.audio_handler import AudioHandler
+import sys
 import asyncio
 
 pygame.init()
@@ -13,8 +14,13 @@ class App:
         self.ScreenSize = (960, 540)
 
         self.screen = pygame.display.set_mode(self.ScreenSize, SCALED)
+        
+        if sys.platform == "emscripten":
+            caption = 'The Hospitium'
+        else:
+            caption = 'The Hospitium - F to toggle fullscreen'
 
-        pygame.display.set_caption('GAME NAME - F to toggle fullscreen')
+        pygame.display.set_caption(caption)
 
         self.clock = pygame.time.Clock()
         self.fps = 0
@@ -74,8 +80,9 @@ class App:
                     pygame.quit()
                     raise SystemExit        
                 
-                if event.key == K_f:
-                    pygame.display.toggle_fullscreen()
+                if sys.platform != "emscripten":
+                    if event.key == K_f:
+                        pygame.display.toggle_fullscreen()
             
             for event_handler in self.event_handlers:
                 event_handler.handle_event(event)

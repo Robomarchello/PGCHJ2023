@@ -45,9 +45,11 @@ class AudioHandler:
         data = load(file)
         for path in data:
             volume = data[path]['volume']
-            volumes.append(volume)
+            volumes.append(volume)  
+
+            pth = data[path]['sound']
             
-            sounds[path] = pygame.mixer.Sound(f'src/sfx/{data[path]['sound']}')
+            sounds[path] = pygame.mixer.Sound(f'src/sfx/{pth}')
             sounds[path].set_volume(volume)
 
     @classmethod

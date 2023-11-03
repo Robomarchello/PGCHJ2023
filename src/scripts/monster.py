@@ -19,8 +19,10 @@ class Monster:
         
         self.roam_target = self.get_target(tiles)
 
-        self.step = 0.2
+        self.step = 0.15
         self.step_timer = 0
+
+        self.visible = False
 
         self.targets = {
             'player': False,
@@ -49,7 +51,7 @@ class Monster:
             if self.targets['player']:
                 target_tile = player_tile
 
-                if not self.tiles[player_tile[1]][player_tile[0]] in [2, 4, 0]:
+                if not self.tiles[player_tile[1]][player_tile[0]] in [2, 4]:
                     target_tile = self.roam_target
             
             if self.tile_pos == self.roam_target:
@@ -58,7 +60,7 @@ class Monster:
             if self.targets['roam']:
                 target_tile = self.roam_target
             
-            path = find_path(self.tile_pos, target_tile, self.tiles, [2, 4, 0])
+            path = find_path(self.tile_pos, target_tile, self.tiles, [2, 4])
 
             
             if path != None:
@@ -96,9 +98,10 @@ class Monster:
 
         rotated = pygame.transform.rotate(self.sprite, self.rotation)
         rotatedRect = rotated.get_rect(center=display_rect.center)
-        screen.blit(rotated, rotatedRect)
-        #pygame.draw.rect(screen, (255, 210, 0), display_rect)
 
+        if self.visible:
+            screen.blit(rotated, rotatedRect)
+        
     def target_player(self):
         self.targets = {
             'player': True,
@@ -111,7 +114,7 @@ class Monster:
             randint(0, len(tiles[1]) - 1),
             randint(0, len(tiles) - 1)
         )
-        while not tiles[roam_target[1]][roam_target[0]] in [2, 4, 0]:
+        while not tiles[roam_target[1]][roam_target[0]] in [2, 4]:
             roam_target = (
                 randint(0, len(tiles[1]) - 1),
                 randint(0, len(tiles) - 1)

@@ -91,9 +91,18 @@ class Game(State):
             self.door_snd.play()
 
         # Check if game is over
-        if (player_center - monster_center).length() < 40:
+        if (player_center - monster_center).length() < 40 and self.monster.visible:
             self.deaths += 1
             self.app.change_state('game_over')
+            self.app.state.reason = 'monster'
+            self.monster_source.stop()
+            self.noise.stop()
+
+        # game over if ran out of oxygen
+        if self.OxygenBar.oxygen_lack:
+            self.deaths += 1
+            self.app.change_state('game_over')
+            self.app.state.reason = 'oxygen'
             self.monster_source.stop()
             self.noise.stop()
 
@@ -124,6 +133,8 @@ class Game(State):
             self.player.position, self.monster.real_pos
         )
         self.monster_source.play()
+
+        self.closed = False
 
     def handle_event(self, event):
         if event.type == KEYDOWN:

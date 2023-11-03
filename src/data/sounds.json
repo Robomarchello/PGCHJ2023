@@ -7,7 +7,10 @@
         "sound": "door.ogg",
         "volume": 1.0
     },
-
+    "alert": {
+        "sound": "alert.ogg",
+        "volume": 1.0
+    },
     "scare_snd": {
         "sound": "scare.ogg",
         "volume": 1.0

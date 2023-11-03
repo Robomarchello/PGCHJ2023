@@ -14,8 +14,10 @@ class OxygenBar:
         self.max_anim = 0.5
         self.anim_timer = 0.0
 
-        self.vent_time = 10
-        self.in_vent = 10.0
+        self.vent_time = 6
+        self.in_vent = 6.0
+        
+        self.oxygen_lack = False
 
         self.rect = pygame.Rect(0, 540, 450, 50)
         self.rect.centerx = 480
@@ -52,6 +54,8 @@ class OxygenBar:
 
             if self.in_vent > 0:
                 self.in_vent -= dt / 60
+            else:
+                self.oxygen_lack = True
             
         else:
             if self.anim_timer > 0:

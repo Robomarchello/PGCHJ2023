@@ -38,10 +38,16 @@ class GameOver(State):
         self.app = app
 
     def scare(self, screen):
-        self.channel = self.sound.play()
-        
-        self.last_screen = screen.copy()
+        if self.reason == 'monster':
+            self.channel = self.sound.play()
+            
+            self.last_screen = screen.copy()
 
+        elif self.reason == 'oxygen':
+            self.channel = self.sound.play()
+            
+            self.last_screen = screen.copy()
+        
     def draw(self, dt):
         self.screen.blit(self.last_screen, (0, 0))
         if not self.channel.get_busy():

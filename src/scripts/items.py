@@ -49,6 +49,7 @@ class ItemHandler:
 
         self.open_exit = True
 
+        self.alert_snd = AudioHandler.sounds['alert']
         self.pickup_sounds = [
             AudioHandler.sounds['pickup1'],
             AudioHandler.sounds['pickup2'],
@@ -100,8 +101,9 @@ class ItemHandler:
             )
         
         if picked_up == 1:
+            self.game.monster.visible = True
             self.game.monster.target_player()
-        
+            self.alert_snd.play()
         
         choice(self.pickup_sounds).play()
 

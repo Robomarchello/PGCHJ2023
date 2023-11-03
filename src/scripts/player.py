@@ -9,6 +9,8 @@ class Player:
         self.position = pygame.Vector2(position)
         self.camera_pos = [0, 0]
         self.rect = pygame.Rect(self.position, (45, 45))
+        
+        self.image = pygame.image.load('src/assets/player.png').convert_alpha()
 
         self.speed = 5
         self.move_dir = {
@@ -27,6 +29,8 @@ class Player:
         self.shake_magn = 3
         self.shake = (0, 0)
         self.shake_dist = 300
+
+        self.up = pygame.Vector2(0, -1)
     
     def update(self, dt, tileRects):
         moveVec = pygame.Vector2(0, 0)
@@ -54,7 +58,13 @@ class Player:
         display_rect = self.rect.copy()
         display_rect.x += self.camera_pos[0]
         display_rect.y += self.camera_pos[1]
-        pygame.draw.rect(screen, (255, 0, 0), display_rect)
+
+        dist = (Mouse.position - display_rect.center)
+        angle = dist.angle_to(self.up) - 180
+
+        rotated = pygame.transform.rotate(self.image, angle)
+        rot_rect = rotated.get_rect(center=display_rect.center)
+        screen.blit(rotated, rot_rect.topleft)
 
     def get_collide(self, rect, tileRects):
         collided = []

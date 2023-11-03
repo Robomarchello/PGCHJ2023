@@ -19,7 +19,7 @@ class Monster:
         
         self.roam_target = self.get_target(tiles)
 
-        self.step = 0.15
+        self.step = 0.16
         self.step_timer = 0
 
         self.visible = False
@@ -30,8 +30,7 @@ class Monster:
             'still': True
         }
 
-        self.sprite = pygame.Surface((self.tileSize, self.tileSize), flags=SRCALPHA)
-        self.sprite.fill((200, 150, 0))
+        self.sprite = pygame.image.load('src/assets/monster.png').convert_alpha()
         self.rotation = 0
         self.counter = 0
 
@@ -51,7 +50,7 @@ class Monster:
             if self.targets['player']:
                 target_tile = player_tile
 
-                if not self.tiles[player_tile[1]][player_tile[0]] in [2, 4]:
+                if not self.tiles[player_tile[1]][player_tile[0]] in [4]:
                     target_tile = self.roam_target
             
             if self.tile_pos == self.roam_target:
@@ -60,7 +59,7 @@ class Monster:
             if self.targets['roam']:
                 target_tile = self.roam_target
             
-            path = find_path(self.tile_pos, target_tile, self.tiles, [2, 4])
+            path = find_path(self.tile_pos, target_tile, self.tiles, [4])
 
             
             if path != None:
@@ -69,7 +68,7 @@ class Monster:
             else:
                 target_tile = self.roam_target
                 self.prev_pos = self.tile_pos
-                
+            
             self.step_timer = 0
 
         self.real_pos = [
@@ -77,6 +76,9 @@ class Monster:
             self.tile_pos[1] * self.tileSize
         ]
         self.rect.topleft = self.real_pos
+
+        self.move_dir = [0, 0]
+        self.up = pygame.Vector2(0, -1)
 
     def draw(self, screen, camera_pos):
         interp = self.step_timer / self.step
@@ -96,7 +98,11 @@ class Monster:
         display_rect.x += camera_pos[0]
         display_rect.y += camera_pos[1]
 
-        rotated = pygame.transform.rotate(self.sprite, self.rotation)
+        diff = pygame.Vector2(self.tile_pos) - self.prev_pos
+        angle = diff.angle_to(self.up)
+        rightAngle = (angle // 90) * 90
+        new_angle = self.rotation + rightAngle - 180
+        rotated = pygame.transform.rotate(self.sprite, new_angle)
         rotatedRect = rotated.get_rect(center=display_rect.center)
 
         if self.visible:
@@ -114,7 +120,8 @@ class Monster:
             randint(0, len(tiles[1]) - 1),
             randint(0, len(tiles) - 1)
         )
-        while not tiles[roam_target[1]][roam_target[0]] in [2, 4]:
+        
+        while not tiles[roam_target[1]][roam_target[0]] in [4]:
             roam_target = (
                 randint(0, len(tiles[1]) - 1),
                 randint(0, len(tiles) - 1)

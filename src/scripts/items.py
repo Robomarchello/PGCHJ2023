@@ -93,7 +93,7 @@ class ItemHandler:
         picked_up = len(self.itemNames) - len(self.items)
         if picked_up == len(self.itemNames):            
             self.messager.new_message(
-                f'Go to the exit door', 10.0
+                f'I should go to the exit door', 10.0
             )
         else:
             self.messager.new_message(

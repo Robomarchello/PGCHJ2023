@@ -29,14 +29,17 @@ def spritesheet_from_file(filePath):
         data = load(file)
 
     image = pygame.image.load(data['path']).convert_alpha()
-    images = data.keys()
+    images = data['tiles'].keys()
     
-    sprites = []
+    sprites = {}
     for sprite in images:
         rect = pygame.Rect(data['rect'])
         rect.x *= -1
         rect.y *= -1
 
         surf = pygame.Surface(rect.size)
-        surf.blit(image, rect.xy)
+        surf.blit(image, rect.topleft)
         
+        sprites[sprite] = surf
+
+    return sprites

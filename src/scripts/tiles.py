@@ -1,4 +1,5 @@
 import pygame
+from .spritesheet import spritesheet_from_file
 from json import load
 
 
@@ -14,6 +15,11 @@ class Level:
         self.itemHandler = itemHandler
         self.game = game
 
+        self.floor = pygame.image.load('src/assets/floor.png').convert()
+        self.grass = pygame.image.load('src/assets/grass.png').convert()
+
+        #self.tile_map = pygame.image.load('src/assets/tile_map.png')
+        #self.tile_map = spritesheet_from_file('src/data/tiles.json)
         self.vents = False
         self.start_anim = True
         self.max_anim = 1.5
@@ -55,15 +61,19 @@ class Level:
                 # grass
                 if tile == 2:
                     pygame.draw.rect(screen, (0, 100, 0), display_rect)
+                    screen.blit(self.grass, display_rect.topleft)
 
                 # unwalkable grass
                 if tile == 3:
                     pygame.draw.rect(screen, (0, 150, 0), display_rect)
                     self.tileRects.append(rect)
+                    screen.blit(self.grass, display_rect.topleft)
+                    
 
                 # floor
                 if tile == 4:
                     pygame.draw.rect(screen, (180, 180, 180), display_rect)
+                    screen.blit(self.floor, display_rect.topleft)
                 
                 # vents
                 if tile == 5:
@@ -86,18 +96,3 @@ class Level:
                         pygame.draw.rect(screen, ((125, 35, 0)), display_rect) 
                     else:  
                         pygame.draw.rect(screen, ((150, 60, 0)), display_rect) 
-
-                '''if tile == 1:
-                    pygame.draw.rect(screen, (105, 105, 105), display_rect)
-                    self.tileRects.append(rect)
-
-                if tile == 2:
-                    pygame.draw.rect(screen, (150, 150, 150), display_rect)
-
-                if tile == 4:
-                    pygame.draw.rect(screen, (125, 35, 0), display_rect)
-
-                    if not self.itemHandler.open_exit:
-                        self.tileRects.append(rect)
-                        '''
-                pygame.draw.rect(screen, (0, 0, 0), display_rect, width=1)

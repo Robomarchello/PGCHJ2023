@@ -1,0 +1,15 @@
+{
+    "path": "src/assets/tilemap.png",
+    "tiles": {
+        "floor":{
+            "rect": [0, 0, 50, 50]
+        },
+
+        "grass":{
+            "rect": [50, 0, 50, 50]
+        },
+        "wall":{
+            "rect": [100, 0, 50, 50]
+        }
+    }
+}

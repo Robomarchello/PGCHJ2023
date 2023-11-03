@@ -88,6 +88,7 @@ class Game(State):
 
         if self.close_trigger.colliderect(self.player.rect) and not self.closed:
             self.closed = True
+            self.Messager.new_message('Why doors closed?', 2)
             self.door_snd.play()
 
         # Check if game is over

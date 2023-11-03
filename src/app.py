@@ -12,8 +12,9 @@ class App:
     def __init__(self):
         self.ScreenSize = (960, 540)
 
-        self.screen = pygame.display.set_mode(self.ScreenSize)
-        pygame.display.set_caption('GAME NAME')
+        self.screen = pygame.display.set_mode(self.ScreenSize, SCALED)
+
+        pygame.display.set_caption('GAME NAME - F to toggle fullscreen')
 
         self.clock = pygame.time.Clock()
         self.fps = 0
@@ -44,10 +45,7 @@ class App:
 
             self.state.draw(dt)
 
-            #scaled_surf = pygame.transform.scale(surface, self.ScreenSize)
-            #screen.blit(scaled_surf, (0, 0))
-
-            pygame.display.set_caption(str(self.clock.get_fps()))
+            #pygame.display.set_caption(str(self.clock.get_fps()))
             pygame.display.update()
 
             await asyncio.sleep(0)
@@ -75,6 +73,9 @@ class App:
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     raise SystemExit        
+                
+                if event.key == K_f:
+                    pygame.display.toggle_fullscreen()
             
             for event_handler in self.event_handlers:
                 event_handler.handle_event(event)

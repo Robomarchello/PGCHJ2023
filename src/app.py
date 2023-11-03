@@ -22,7 +22,8 @@ class App:
 
         self.states = {
             'game': Game(self.screen, self.ScreenSize, self),
-            'game_over': GameOver(self.screen, self.ScreenSize, self)
+            'game_over': GameOver(self.screen, self.ScreenSize, self),
+            'win_screen': WinScreen(self.screen, self.ScreenSize, self)
         }
         
         self.crnt_state = 'game'
@@ -61,6 +62,9 @@ class App:
         if state == 'game_over':
             self.states[self.crnt_state].scare(self.screen)
 
+        if state == 'win_screen':
+            pass
+        
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == QUIT:

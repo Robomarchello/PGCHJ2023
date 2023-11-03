@@ -23,9 +23,9 @@ class Monster:
         self.step_timer = 0
 
         self.targets = {
-            'player': False,
+            'player': True,
             'roam': False,
-            'still': True
+            'still': False
         }
 
         self.sprite = pygame.Surface((self.tileSize, self.tileSize), flags=SRCALPHA)
@@ -49,7 +49,7 @@ class Monster:
             if self.targets['player']:
                 target_tile = player_tile
 
-                if self.tiles[player_tile[1]][player_tile[0]] != 0:
+                if not self.tiles[player_tile[1]][player_tile[0]] in [2, 4, 0]:
                     target_tile = self.roam_target
             
             if self.tile_pos == self.roam_target:
@@ -58,7 +58,8 @@ class Monster:
             if self.targets['roam']:
                 target_tile = self.roam_target
             
-            path = find_path(self.tile_pos, target_tile, self.tiles, [0])
+            path = find_path(self.tile_pos, target_tile, self.tiles, [2, 4, 0])
+
             
             if path != None:
                 self.prev_pos = self.tile_pos
@@ -103,7 +104,7 @@ class Monster:
             randint(0, len(tiles[1]) - 1),
             randint(0, len(tiles) - 1)
         )
-        while tiles[roam_target[1]][roam_target[0]] != 0:
+        while not tiles[roam_target[1]][roam_target[0]] in [2, 4, 0]:
             roam_target = (
                 randint(0, len(tiles[1]) - 1),
                 randint(0, len(tiles) - 1)

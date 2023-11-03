@@ -1,4 +1,5 @@
 import pygame
+from random import uniform
 
 
 class OxygenBar:
@@ -13,8 +14,8 @@ class OxygenBar:
         self.max_anim = 0.5
         self.anim_timer = 0.0
 
-        self.vent_time = 5
-        self.in_vent = 0.0
+        self.vent_time = 10
+        self.in_vent = 10.0
 
         self.rect = pygame.Rect(0, 540, 450, 50)
         self.rect.centerx = 480
@@ -22,8 +23,17 @@ class OxygenBar:
 
         self.anim_rect = self.rect.copy()
 
+        self.shake = pygame.Vector2(0, 0)
+
     def draw(self, screen):
+        oxygen_rect = self.anim_rect.copy()
+        coef = oxygen_rect.width / self.vent_time
+        
+        oxygen_rect.width = coef * self.in_vent
+
         pygame.draw.rect(screen, (105, 105, 105), self.anim_rect)
+        pygame.draw.rect(screen, (0, 255, 0), oxygen_rect)
+        pygame.draw.rect(screen, (0, 0, 0), self.anim_rect, width=3)
 
     def update(self, dt):
         tile_pos = [
@@ -31,7 +41,7 @@ class OxygenBar:
             int(self.player.position[1] // self.tileSize)
         ]
         
-        if self.tiles[tile_pos[1]][tile_pos[0]] == 2:
+        if self.tiles[tile_pos[1]][tile_pos[0]] == 5:
             self.anim = True
         else:
             self.anim = False
@@ -39,10 +49,23 @@ class OxygenBar:
         if self.anim:
             if self.anim_timer < self.max_anim:
                 self.anim_timer += dt / 60
+
+            if self.in_vent > 0:
+                self.in_vent -= dt / 60
             
         else:
             if self.anim_timer > 0:
                 self.anim_timer -= dt / 60
 
+            if self.in_vent < self.vent_time:
+                self.in_vent += dt / 60
+                
         new_y = self.rect.y + (self.anim_timer / self.max_anim) * self.y_move
         self.anim_rect.y = new_y
+
+    def calculate_shake(self, magnitude):
+        shake = (
+            uniform(-magnitude, magnitude), 
+            uniform(-magnitude, magnitude)
+        )
+        return shake

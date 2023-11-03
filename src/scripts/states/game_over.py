@@ -28,6 +28,12 @@ class GameOver(State):
         self.channel = None
 
         self.jump_scare = pygame.image.load('src/assets/jumpscare.png').convert()
+        self.vents_scare = pygame.image.load('src/assets/jumpscare.png').convert()
+
+        self.reasons = [
+            'monster', 'oxygen'
+        ]
+        self.reason = 'monster'
 
         self.app = app
 

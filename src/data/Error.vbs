@@ -1,0 +1,1 @@
+X=MsgBox("Thanks for playing! System self-destruction in 3..2..1..", 0+16, "RoboMarchello:")

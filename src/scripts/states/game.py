@@ -4,7 +4,7 @@ from pygame.locals import *
 from src.scripts.mouse import Mouse
 from src.scripts.tiles import Level
 from src.scripts.player import Player
-from src.scripts.monster import Monster, Follower
+from src.scripts.monster import Monster
 from src.scripts.items import ItemHandler
 from src.scripts.oxygen_bar import OxygenBar
 from src.scripts.audio_handler import SoundSource, AudioHandler
@@ -27,7 +27,7 @@ class Game(State):
 
         self.map = Level('src/data/level1.json', self.ScreenSize, 
                          self.tileSize, self.ItemHandler)
-        self.monster = Monster(self.player, (2, 2), 50, self.map.tiles)
+        self.monster = Monster(self.player, (2, 2), self.tileSize, self.map.tiles)
 
         self.OxygenBar = OxygenBar(self.player, self.tileSize, self.map.tiles)
 
@@ -41,9 +41,6 @@ class Game(State):
         self.monster_source.play()
         
         self.vignette = pygame.image.load('src/assets/vignette.png').convert_alpha()
-
-        # if windows username == baconinvader
-        # then scare him😈😈😈
         
         self.finish_trigger = pygame.Rect(3150, 700, 100, 150)
 
@@ -51,6 +48,10 @@ class Game(State):
         self.playtime = 0.0
         self.input_n = 0
         self.deaths = 0
+
+        # TODO: 
+        # if windows username == baconinvader
+        # then scare him😈😈😈
 
     def draw(self, dt):
         screen = self.screen
@@ -90,7 +91,10 @@ class Game(State):
 
         # Check if game is finished
         if self.player.rect.colliderect(self.finish_trigger):
-            print('yeah')
+            self.app.change_state('win_screen')
+            self.app.state.update_stats(self)
+            self.monster_source.stop()
+            self.noise.stop()
 
     def restart(self):
         self.Messager = Messager('src/assets/font.ttf', self.ScreenSize)

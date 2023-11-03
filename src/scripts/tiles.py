@@ -46,7 +46,39 @@ class Level:
                 if not self.screenRect.colliderect(rect):
                     continue
                 
+                # wall
                 if tile == 1:
+                    pygame.draw.rect(screen, (105, 105, 105), display_rect)
+                    self.tileRects.append(rect)
+
+                # grass
+                if tile == 2:
+                    pygame.draw.rect(screen, (0, 100, 0), display_rect)
+
+                # unwalkable grass
+                if tile == 3:
+                    pygame.draw.rect(screen, (0, 150, 0), display_rect)
+                    self.tileRects.append(rect)
+
+                # floor
+                if tile == 4:
+                    pygame.draw.rect(screen, (180, 180, 180), display_rect)
+                
+                # vents
+                if tile == 5:
+                    pygame.draw.rect(screen, (130, 130, 130), display_rect)
+
+                # exit door                
+                if tile == 6:
+                    pygame.draw.rect(screen, (125, 35, 0), display_rect)
+                    if not self.itemHandler.open_exit:
+                        self.tileRects.append(rect)
+
+                # unwalkable for monster
+                if tile == 7:
+                    pygame.draw.rect(screen, (180, 180, 180), display_rect)                
+
+                '''if tile == 1:
                     pygame.draw.rect(screen, (105, 105, 105), display_rect)
                     self.tileRects.append(rect)
 
@@ -58,5 +90,5 @@ class Level:
 
                     if not self.itemHandler.open_exit:
                         self.tileRects.append(rect)
-                        
+                        '''
                 pygame.draw.rect(screen, (0, 0, 0), display_rect, width=1)

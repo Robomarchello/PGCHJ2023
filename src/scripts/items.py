@@ -54,10 +54,32 @@ class ItemHandler:
             AudioHandler.sounds['pickup3']
         ]
 
+        self.pickup_text = pygame.image.load('src/assets/pickup_text.png').convert_alpha()
+        self.text_rect = self.pickup_text.get_rect()
+        self.text_rect.centerx = 480
+        self.text_rect.y = 485
+        self.scale_length = 120
+
     def draw(self, screen, cam_pos):
         for item in self.items:
             item.draw(screen, cam_pos)
- 
+
+        for item in self.items:
+            player_center = pygame.Vector2(self.player.rect.center)
+            diff = player_center - item.rect.center
+            length = diff.length()
+
+            if length < self.scale_length:
+                closeness = 1 - (length / self.scale_length) ** 2
+                scaled_rect = self.text_rect.copy()
+                scaled_rect.width *= closeness
+                scaled_rect.height *= closeness
+                scaled_rect.center = self.text_rect.center
+                scaled_image = pygame.transform.scale(
+                    self.pickup_text, scaled_rect.size)
+                
+                screen.blit(scaled_image, scaled_rect.topleft)
+
     def finish(self):
         if len(self.items) == 0:
             print('go to the exit door')
